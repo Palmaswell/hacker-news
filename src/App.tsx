@@ -1,18 +1,13 @@
 import React from 'react';
-import styled from 'styled-components';
-import { StoryProvider } from './context';
-
-const StyledBox = styled.div`
-  background-color: white;
-  color: black;
-`;
-
-StyledBox.displayName = 'StyledBox';
+import { StoryContext, Story } from './context';
 
 export default function App(): JSX.Element {
+  const { published } = React.useContext(StoryContext);
   return (
-    <StoryProvider>
-      <StyledBox>Hi Mom</StyledBox>
-    </StoryProvider>
+    <ul>
+      {published.map((story: Story) => (
+        <li key={story.id}>{story.title}</li>
+      ))}
+    </ul>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import * as database from '../db';
+import { ProviderState, reducer, ActionType } from '.';
 
 export interface Story {
   readonly by: string;
@@ -9,46 +9,102 @@ export interface Story {
   readonly url: string;
 }
 
-export const StoryContext = React.createContext<Story[]>([]);
+export interface StoryContextProps {
+  readonly published: Story[];
+  readonly stories: Story[];
+  readonly ids: number[];
+  readonly counter: number;
+  publishStory(story: Story): void;
+}
+
+export const StoryContext = React.createContext<StoryContextProps>(
+  {} as StoryContextProps,
+);
 StoryContext.displayName = 'StoryContext';
 
+const cacheKey = 'cached_stories';
+
+//TODO: use the localstorage value or
+const initialState: ProviderState = {
+  counter: 0,
+  stories: [],
+  ids: [],
+  published: [],
+};
+
 export const StoryProvider: React.FC = props => {
-  // const [storiesIds, setStoriesIds] = React.useState<number[]>([]);
+  const [{ counter, ids, published, stories }, dispatch] = React.useReducer(
+    reducer,
+    initialState,
+  );
+
+  const getStoryIds = (ids: number[]): void =>
+    dispatch({ type: ActionType.fetchIds, ids });
+  const publishStory = (story: Story): void =>
+    dispatch({ type: ActionType.publish, story });
+  const fetchStory = (story: Story): void =>
+    dispatch({ type: ActionType.fetchStory, story });
+  const setCounter = (counter: number): void =>
+    dispatch({ type: ActionType.setCounter, counter });
 
   React.useEffect(() => {
-    async function persist(): Promise<void> {
-      const stores = database.create('hacker_news');
-      const db = await stores([
-        { name: 'ids' },
-        { name: 'stories', hasIdx: true },
-      ]);
-
-      console.log('persist--09999000----------');
-      console.log(db);
-    }
-    persist().then(() => console.log('it has been called'));
-    // const fetchIds = async (): Promise<void> => {
-    //   const response = await fetch(
-    //     'https://hacker-news.firebaseio.com/v0/newstories.json',
-    //   );
-    //   await response.json();
-    //   console.log('waht about here------22222');
-    //   // setStoriesIds(data);
-    // };
-    // fetchIds();
+    const fetchIds = async (): Promise<void> => {
+      try {
+        const res = await fetch(
+          'https://hacker-news.firebaseio.com/v0/newstories.json',
+        );
+        const ids = await res.json();
+        getStoryIds(ids);
+      } catch (error) {
+        console.warn(`Fetching story ids failed with: ${error}`);
+      }
+    };
+    fetchIds();
+    //TODO: calculate according the amount of possible fitting items
+    setCounter(20);
   }, []);
 
-  const provider = [
-    {
-      by: 'Mauricio',
-      id: 'one',
-      time: 100,
-      title: 'foo',
-      url: 'www',
-    },
-  ];
+  React.useEffect(() => {
+    const fetchStories = async (): Promise<Story[] | void> => {
+      try {
+        //TODO: move to own function
+        const stories = await Promise.all(
+          ids.map(async (id, idx) => {
+            const res = await fetch(
+              `https://hacker-news.firebaseio.com/v0/item/${id}.json`,
+            );
+            const hackerStory = await res.json();
+            const story = {
+              by: hackerStory.by,
+              id: hackerStory.id,
+              time: hackerStory.time,
+              title: hackerStory.title,
+              url: hackerStory.url,
+            };
+            fetchStory(story);
+            if (idx <= counter) {
+              publishStory(story);
+            }
+            return story;
+          }),
+        );
+        localStorage.setItem(cacheKey, JSON.stringify(stories));
+      } catch (error) {
+        console.warn(`Fetching story failed with: ${error}`);
+      }
+    };
+    fetchStories();
+  }, [ids]);
+
+  const state = {
+    counter,
+    ids,
+    published,
+    publishStory,
+    stories,
+  };
   return (
-    <StoryContext.Provider value={provider}>
+    <StoryContext.Provider value={state}>
       {props.children}
     </StoryContext.Provider>
   );
