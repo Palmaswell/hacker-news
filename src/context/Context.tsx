@@ -25,7 +25,6 @@ StoryContext.displayName = 'StoryContext';
 const cacheKey = 'cached_stories';
 const cachedStories = window.localStorage.getItem(cacheKey);
 
-//TODO: use the localstorage value or
 const initialState: ProviderState = {
   counter: 20,
   stories: cachedStories ? JSON.parse(cachedStories) : [],
@@ -64,19 +63,21 @@ export const StoryProvider: React.FC = props => {
       }
     };
 
+    //TODO: calculate according the amount of possible fitting items
     setCounter(20);
     if (stories.length < 1) {
       fetchIds();
+    } else {
+      bulkPublishStories(stories.slice(0, counter));
     }
-    //TODO: calculate according the amount of possible fitting items
   }, []);
 
   React.useEffect(() => {
     const fetchStories = async (): Promise<Story[] | void> => {
       try {
-        //TODO: move to own function
+        //TODO: move to own function and fetch other 100 when the intersection observable fires.
         const stories = await Promise.all(
-          ids.map(async (id, idx) => {
+          ids.slice(0, 150).map(async (id, idx) => {
             const res = await fetch(
               `https://hacker-news.firebaseio.com/v0/item/${id}.json`,
             );
@@ -102,8 +103,6 @@ export const StoryProvider: React.FC = props => {
     };
     if (stories.length < 1) {
       fetchStories();
-    } else {
-      bulkPublishStories(stories.slice(0, counter));
     }
   }, [ids]);
 
