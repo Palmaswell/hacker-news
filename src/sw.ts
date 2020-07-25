@@ -1,4 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+export interface ExtendableEvent extends Event {
+  readonly request: Request;
+  waitUntil(fn: Promise<unknown>): void;
+  respondWith(fn: Promise<unknown>): void;
+}
+
+export interface ServiceWorkerGlobalScope {
+  skipWaiting: () => void;
+}
+
 export function register(): void {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
@@ -14,22 +23,28 @@ export function register(): void {
   }
 }
 
-self.addEventListener('install', (event: any) => {
-  event.waitUntil(
-    caches
-      .open('hacker-news-static-assets')
-      .then(cache =>
-        cache
-          .addAll(['/', '/index.html', '/app.js'])
-          .then(() => (self as any).skipWaiting()),
-      ),
-  );
+self.addEventListener('install', async (event: Event) => {
+  try {
+    const cache = await caches.open('hacker-news-static-assets');
+
+    (event as ExtendableEvent).waitUntil(
+      cache.addAll(['/', '/index.html', '/app.js']),
+    );
+  } catch (error) {
+    console.warn(`Service Worker installation failed with ${error}`);
+  }
 });
 
-self.addEventListener('fetch', async (event: any) => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    }),
+self.addEventListener('fetch', (event: Event) => {
+  const ev = event as ExtendableEvent;
+  ev.respondWith(
+    caches
+      .match(ev.request)
+      .then(response => {
+        return response || fetch(ev.request);
+      })
+      .catch(error =>
+        console.warn(`Service Worker fetch failed with ${error}`),
+      ),
   );
 });

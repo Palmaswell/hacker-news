@@ -2,7 +2,7 @@
 
 > Read your tech news under any condition.
 
-## Motivation
+## Development
 
 ### Development Requirements
 
@@ -13,7 +13,7 @@
 ### Getting started with development
 
 ```sh
-git clone
+git clone git@github.com:Palmaswell/hacker-news.git
 cd hacker-news
 # Install packages
 yarn
@@ -34,3 +34,5 @@ The list of most important commands to work with the selected workspace.
 | `yarn test`          | Run unit tests written with Jest                                        |
 | `yarn test:coverage` | Collects Jest coverage information                                      |
 | `yarn watch`         | Recompile on file changes                                               |
+
+## How it works

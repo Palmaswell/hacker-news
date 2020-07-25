@@ -18,6 +18,11 @@ module.exports = {
   ],
   rules: {
     'react-hooks/rules-of-hooks': 'error',
+    'react/prop-types': 'off',
+    '@typescript-eslint/explicit-function-return-type': [
+      'warn',
+      { allowExpressions: true }
+    ],
   },
   settings: {
     react: {
