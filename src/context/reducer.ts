@@ -11,10 +11,12 @@ export interface Action {
   readonly type: ActionType;
   readonly ids?: number[];
   readonly story?: Story;
+  readonly stories?: Story[];
   readonly counter?: number;
 }
 
 export enum ActionType {
+  bulkPublish = 'bulkPublish',
   fetchIds = 'fetchIds',
   fetchStory = 'fetchStory',
   publish = 'publish',
@@ -27,6 +29,12 @@ export function reducer(state: ProviderState, action: Action): ProviderState {
       return {
         ...state,
         ...(Array.isArray(action.ids) && { ids: [...action.ids] }),
+      };
+    }
+    case ActionType.bulkPublish: {
+      return {
+        ...state,
+        ...(action.stories && { published: [...action.stories] }),
       };
     }
     case ActionType.publish: {

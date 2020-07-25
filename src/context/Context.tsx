@@ -23,11 +23,12 @@ export const StoryContext = React.createContext<StoryContextProps>(
 StoryContext.displayName = 'StoryContext';
 
 const cacheKey = 'cached_stories';
+const cachedStories = window.localStorage.getItem(cacheKey);
 
 //TODO: use the localstorage value or
 const initialState: ProviderState = {
-  counter: 0,
-  stories: [],
+  counter: 20,
+  stories: cachedStories ? JSON.parse(cachedStories) : [],
   ids: [],
   published: [],
 };
@@ -42,6 +43,9 @@ export const StoryProvider: React.FC = props => {
     dispatch({ type: ActionType.fetchIds, ids });
   const publishStory = (story: Story): void =>
     dispatch({ type: ActionType.publish, story });
+  const bulkPublishStories = (stories: Story[]): void =>
+    dispatch({ type: ActionType.bulkPublish, stories });
+
   const fetchStory = (story: Story): void =>
     dispatch({ type: ActionType.fetchStory, story });
   const setCounter = (counter: number): void =>
@@ -59,9 +63,12 @@ export const StoryProvider: React.FC = props => {
         console.warn(`Fetching story ids failed with: ${error}`);
       }
     };
-    fetchIds();
-    //TODO: calculate according the amount of possible fitting items
+
     setCounter(20);
+    if (stories.length < 1) {
+      fetchIds();
+    }
+    //TODO: calculate according the amount of possible fitting items
   }, []);
 
   React.useEffect(() => {
@@ -81,10 +88,10 @@ export const StoryProvider: React.FC = props => {
               title: hackerStory.title,
               url: hackerStory.url,
             };
-            fetchStory(story);
             if (idx <= counter) {
               publishStory(story);
             }
+            fetchStory(story);
             return story;
           }),
         );
@@ -93,7 +100,11 @@ export const StoryProvider: React.FC = props => {
         console.warn(`Fetching story failed with: ${error}`);
       }
     };
-    fetchStories();
+    if (stories.length < 1) {
+      fetchStories();
+    } else {
+      bulkPublishStories(stories.slice(0, counter));
+    }
   }, [ids]);
 
   const state = {

@@ -1,17 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { StoryProvider } from './context';
 import App from './App';
-// import * as serviceWorker from './sw';
+import * as serviceWorker from './sw';
 
 ReactDOM.render(
   <React.StrictMode>
-    <StoryProvider>
-      <App />
-    </StoryProvider>
+    <App />
   </React.StrictMode>,
   document.getElementById('app'),
 );
 
-// serviceWorker.register();
+serviceWorker.register();

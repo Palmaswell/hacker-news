@@ -1,7 +1,7 @@
 import React from 'react';
-import { StoryContext, Story } from './context';
+import { StoryContext, Story, StoryProvider } from './context';
 
-export default function App(): JSX.Element {
+export const List: React.FC = () => {
   const { published } = React.useContext(StoryContext);
   return (
     <ul>
@@ -9,5 +9,13 @@ export default function App(): JSX.Element {
         <li key={story.id}>{story.title}</li>
       ))}
     </ul>
+  );
+};
+
+export default function App(): JSX.Element {
+  return (
+    <StoryProvider>
+      <List />
+    </StoryProvider>
   );
 }
