@@ -23,11 +23,31 @@ export interface InitFetchStories {
 }
 
 export enum ActionType {
-  publishBulk = 'publishBulk',
   fetchIds = 'fetchIds',
   push = 'push',
+  pushBulk = 'pushBulk',
   publish = 'publish',
+  publishBulk = 'publishBulk',
   setCounter = 'setCounter',
+}
+
+export function publisher(
+  stories: Story[],
+  published: Story[],
+  counter: number,
+): Story[] | [] {
+  const lastPublished = published[published.length - 1];
+  const isPublished = stories
+    .slice(published.length)
+    .find(story => story.id === lastPublished.id);
+
+  if (isPublished) {
+    return [];
+  }
+
+  return published.concat(
+    stories.slice(published.length, published.length + counter),
+  );
 }
 
 export async function fetchIds(): Promise<number[]> {
@@ -41,14 +61,19 @@ export async function fetchIds(): Promise<number[]> {
   } catch (error) {
     console.warn(`Fetching story ids failed with: ${error}`);
 
-    return Promise.resolve([])
+    return Promise.resolve([]);
   }
 }
 
-export async function fetchStories({ids, counter, publish, push }: InitFetchStories): Promise<Story[]> {
+export async function fetchStories({
+  ids,
+  counter,
+  publish,
+  push,
+}: InitFetchStories): Promise<Story[]> {
   try {
     return await Promise.all(
-      ids.slice(0, 200).map(async (id: number, idx: number) => {
+      ids.map(async (id: number, idx: number) => {
         const res = await fetch(
           `https://hacker-news.firebaseio.com/v0/item/${id}.json`,
         );
@@ -64,15 +89,36 @@ export async function fetchStories({ids, counter, publish, push }: InitFetchStor
         if (idx <= counter) {
           publish(story);
         }
-        push(story);
+        if (idx <= counter * 4) {
+          push(story);
+        }
 
         return story;
       }),
     );
-
   } catch (error) {
     console.warn(`Fetch stories failed with: ${error}`);
-    return Promise.resolve([])
+    return Promise.resolve([]);
+  }
+}
+
+export async function* collectStories(
+  ids: number[],
+): AsyncGenerator<Story, void, Story> {
+  for await (const id of ids) {
+    const res = await fetch(
+      `https://hacker-news.firebaseio.com/v0/item/${id}.json`,
+    );
+    const hackerStory = await res.json();
+    const story = {
+      by: hackerStory.by,
+      id: hackerStory.id,
+      time: hackerStory.time,
+      title: hackerStory.title,
+      url: hackerStory.url,
+    };
+
+    yield story;
   }
 }
 
@@ -95,7 +141,9 @@ export function reducer(state: ReducerState, action: Action): ReducerState {
     case ActionType.publishBulk: {
       return {
         ...state,
-        ...(action.stories && { published: [...action.stories] }),
+        ...(action.stories && {
+          published: [...action.stories],
+        }),
       };
     }
 
@@ -103,6 +151,15 @@ export function reducer(state: ReducerState, action: Action): ReducerState {
       return {
         ...state,
         ...(action.story && { stories: [...state.stories, action.story] }),
+      };
+    }
+
+    case ActionType.pushBulk: {
+      return {
+        ...state,
+        ...(action.stories && {
+          stories: [...action.stories],
+        }),
       };
     }
 
@@ -117,4 +174,3 @@ export function reducer(state: ReducerState, action: Action): ReducerState {
     }
   }
 }
-

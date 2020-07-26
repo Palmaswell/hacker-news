@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Reducer publisher() should return an array containing the next bulk of stories to be published 1`] = `
+Array [
+  Object {
+    "by": "makeworld",
+    "id": 23957535,
+    "time": 1595775730,
+    "title": "Crypto 101",
+    "url": "https://www.crypto101.io/",
+  },
+  Object {
+    "by": "farseek",
+    "id": 23957534,
+    "time": 1595775724,
+    "title": "Big ‘Ol List of Jobs",
+    "url": "https://www.crypto101.io/",
+  },
+  Object {
+    "by": "Lemmih",
+    "id": 23957530,
+    "time": 1595775705,
+    "title": "Voice Controlled Animations",
+    "url": "https://reanimate.readthedocs.io/en/latest/voice/",
+  },
+  Object {
+    "by": "based2",
+    "id": 23957527,
+    "time": 1595775677,
+    "title": "Apache Camel 2.15.4 Released",
+    "url": "http://mail-archives.apache.org/mod_mbox/www-annou…6qHYBrJPR006RtkPLRyVGs2uRQJ3A%40mail.gmail.com%3E",
+  },
+  Object {
+    "by": "based2",
+    "id": 23957510,
+    "time": 1595775536,
+    "title": "New ‘Meow’ attack has deleted almost 4k unsecured databases",
+    "url": "https://www.bleepingcomputer.com/news/security/new…ack-has-deleted-almost-4-000-unsecured-databases/",
+  },
+  Object {
+    "by": "pseudolus",
+    "id": 23957505,
+    "time": 1595775507,
+    "title": "What’s Going on Inside Argentina’s Fearsome Thunderstorms?",
+    "url": "https://www.nytimes.com/interactive/2020/07/22/magazine/worst-storms-argentina.html",
+  },
+  Object {
+    "by": "shahinrostami",
+    "id": 23957485,
+    "time": 1595775301,
+    "title": "Show HN: I made an interactive explorer for co-occurring Pokémon Types",
+    "url": "https://shahinrostami.com/posts/statistics/data-is-beautiful/co-occurring-pokemon-types/",
+  },
+  Object {
+    "by": "verandaguy",
+    "id": 23957483,
+    "time": 1595775293,
+    "title": "Overview of the Contoso Corporation",
+    "url": "https://docs.microsoft.com/en-us/microsoft-365/enterprise/contoso-overview?view=o365-worldwide",
+  },
+  Object {
+    "by": "evo_9",
+    "id": 23957459,
+    "time": 1595775113,
+    "title": "20 years ago, Steve Jobs built the “coolest computer ever”–and it bombed",
+    "url": "https://arstechnica.com/gadgets/2020/07/20-years-a…bs-built-the-coolest-computer-ever-and-it-bombed/",
+  },
+  Object {
+    "by": "teddyh",
+    "id": 23957455,
+    "time": 1595775086,
+    "title": "Headphones are collecting too much personal data",
+    "url": "https://www.soundguys.com/headphones-are-collecting-too-much-personal-data-21524/",
+  },
+  Object {
+    "by": "Fiveplus",
+    "id": 23957437,
+    "time": 1595774937,
+    "title": "A former chaos engineer offers tips for handling online disasters remotely",
+    "url": "https://techcrunch.com/2020/04/01/a-former-chaos-e…rs-5-tips-for-handling-online-disasters-remotely/",
+  },
+  Object {
+    "by": "afrcnc",
+    "id": 23957430,
+    "time": 1595774899,
+    "title": "Dramatic decline found in Western bumblebee populations",
+    "url": "https://www.timesunion.com/news/article/Dramatic-decline-found-in-Western-bumblebee-15433741.php",
+  },
+]
+`;
