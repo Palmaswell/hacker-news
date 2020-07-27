@@ -71,8 +71,9 @@ export const StoryProvider: React.FC = props => {
         getStoryIds(ids);
         const stories = await fetchStories({ ids, counter, publish, push });
         if (stories.length) {
-          localStorage.setItem(CACHED_KEY, JSON.stringify(stories));
-          pushBulk(stories);
+          const filteredStories = stories.filter(story => !!story) as Story[];
+          localStorage.setItem(CACHED_KEY, JSON.stringify(filteredStories));
+          pushBulk(filteredStories);
         }
       })();
     } else {

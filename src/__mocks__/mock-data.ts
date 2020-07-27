@@ -1,4 +1,4 @@
-import { Story } from '..';
+import { Story } from '../context';
 
 export const storiesMock: Story[] = [
   {

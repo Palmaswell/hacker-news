@@ -1,5 +1,5 @@
-import { publisher } from '../reducer';
-import { storiesMock, publishedMock } from './mock-data';
+import { createStory, publisher } from '../reducer';
+import { storiesMock, publishedMock } from '../../__mocks__/mock-data';
 import { Story } from '..';
 
 describe('Reducer', () => {
@@ -36,6 +36,100 @@ describe('Reducer', () => {
 
     it('should return an array containing the next bulk of stories to be published', () => {
       expect(publisher(storiesMock, publishedMock, 6)).toMatchSnapshot();
+    });
+  });
+
+  describe('createStory()', () => {
+    it('should return null on missing story', () => {
+      expect(createStory(null)).toBeNull();
+    });
+
+    it('should return a string containing unknown on missing by property', () => {
+      expect(
+        createStory({
+          descendants: 0,
+          id: 23965288,
+          score: 1,
+          time: 1595859421,
+          title: 'Ben Garfinkel on scrutinising classic AI risk arguments',
+          type: 'story',
+          url: 'https://name/',
+        }),
+      ).toEqual(
+        expect.objectContaining({
+          by: 'unknown',
+          id: 23965288,
+          time: 1595859421,
+          title: 'Ben Garfinkel on scrutinising classic AI risk arguments',
+          url: 'https://name/',
+        }),
+      );
+    });
+
+    it('should return a string containing unknown on missing title property', () => {
+      expect(
+        createStory({
+          by: 'robertwiblin',
+          descendants: 0,
+          id: 23965288,
+          score: 1,
+          time: 1595859421,
+          type: 'story',
+          url: 'https://name/',
+        }),
+      ).toEqual(
+        expect.objectContaining({
+          by: 'robertwiblin',
+          id: 23965288,
+          time: 1595859421,
+          title: 'unknown',
+          url: 'https://name/',
+        }),
+      );
+    });
+
+    it('should return a string containing unknown on missing url property', () => {
+      expect(
+        createStory({
+          by: 'robertwiblin',
+          descendants: 0,
+          id: 23965288,
+          score: 1,
+          time: 1595859421,
+          title: 'Ben Garfinkel on scrutinising classic AI risk arguments',
+          type: 'story',
+        }),
+      ).toEqual(
+        expect.objectContaining({
+          by: 'robertwiblin',
+          id: 23965288,
+          time: 1595859421,
+          title: 'Ben Garfinkel on scrutinising classic AI risk arguments',
+          url: 'unknown',
+        }),
+      );
+    });
+
+    it('should return a number containing 0 on missing time property', () => {
+      expect(
+        createStory({
+          by: 'robertwiblin',
+          descendants: 0,
+          id: 23965288,
+          score: 1,
+          url: 'https://name/',
+          title: 'Ben Garfinkel on scrutinising classic AI risk arguments',
+          type: 'story',
+        }),
+      ).toEqual(
+        expect.objectContaining({
+          by: 'robertwiblin',
+          id: 23965288,
+          time: 0,
+          title: 'Ben Garfinkel on scrutinising classic AI risk arguments',
+          url: 'https://name/',
+        }),
+      );
     });
   });
 });

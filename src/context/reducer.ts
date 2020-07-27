@@ -31,6 +31,12 @@ export enum ActionType {
   setCounter = 'setCounter',
 }
 
+export interface HackerStory extends Story {
+  readonly descendants: number;
+  readonly score: number;
+  readonly type: string;
+}
+
 export function publisher(
   stories: Story[],
   published: Story[],
@@ -48,6 +54,20 @@ export function publisher(
   return published.concat(
     stories.slice(published.length, published.length + counter),
   );
+}
+
+export function createStory(story: Partial<HackerStory> | null): Story | null {
+  if (story === null) {
+    return null;
+  }
+  const placeholder = 'unknown';
+  return {
+    by: story.by ?? placeholder,
+    id: story.id ?? 0,
+    title: story.title ?? placeholder,
+    time: story.time ?? 0,
+    url: story.url ?? placeholder,
+  };
 }
 
 export async function fetchIds(): Promise<number[]> {
@@ -70,7 +90,7 @@ export async function fetchStories({
   counter,
   publish,
   push,
-}: InitFetchStories): Promise<Story[]> {
+}: InitFetchStories): Promise<(Story | null)[]> {
   try {
     return await Promise.all(
       ids.map(async (id: number, idx: number) => {
@@ -78,19 +98,16 @@ export async function fetchStories({
           `https://hacker-news.firebaseio.com/v0/item/${id}.json`,
         );
         const hackerStory = await res.json();
+        const story = createStory(hackerStory);
+        console.log('are you going in here?', story);
 
-        const story = {
-          by: hackerStory.by,
-          id: hackerStory.id,
-          time: hackerStory.time,
-          title: hackerStory.title,
-          url: hackerStory.url,
-        };
-        if (idx <= counter) {
-          publish(story);
-        }
-        if (idx <= counter * 4) {
-          push(story);
+        if (!!story) {
+          if (idx <= counter) {
+            publish(story);
+          }
+          if (idx <= counter * 5) {
+            push(story);
+          }
         }
 
         return story;
@@ -99,26 +116,6 @@ export async function fetchStories({
   } catch (error) {
     console.warn(`Fetch stories failed with: ${error}`);
     return Promise.resolve([]);
-  }
-}
-
-export async function* collectStories(
-  ids: number[],
-): AsyncGenerator<Story, void, Story> {
-  for await (const id of ids) {
-    const res = await fetch(
-      `https://hacker-news.firebaseio.com/v0/item/${id}.json`,
-    );
-    const hackerStory = await res.json();
-    const story = {
-      by: hackerStory.by,
-      id: hackerStory.id,
-      time: hackerStory.time,
-      title: hackerStory.title,
-      url: hackerStory.url,
-    };
-
-    yield story;
   }
 }
 
