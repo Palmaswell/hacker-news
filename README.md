@@ -1,6 +1,6 @@
-# Hacker Pocket News
+# Latest Hacker Digest
 
-> Read your tech news under any condition.
+> Read your latest tech news under any network condition.
 
 ## Development
 

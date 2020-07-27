@@ -40,6 +40,20 @@ describe('Reducer', () => {
   });
 
   describe('createStory()', () => {
+    let initialTime: number;
+    let date: string;
+    let currentDate: string;
+    beforeEach(() => {
+      initialTime = 1595859421;
+      date = new Date(initialTime * 1000).toLocaleString();
+      currentDate = new Date(Date.now() * 1000).toLocaleString();
+    });
+
+    afterEach(() => {
+      initialTime = (undefined as unknown) as number;
+      date = (undefined as unknown) as string;
+      currentDate = (undefined as unknown) as string;
+    });
     it('should return null on missing story', () => {
       expect(createStory(null)).toBeNull();
     });
@@ -50,7 +64,7 @@ describe('Reducer', () => {
           descendants: 0,
           id: 23965288,
           score: 1,
-          time: 1595859421,
+          time: initialTime,
           title: 'Ben Garfinkel on scrutinising classic AI risk arguments',
           type: 'story',
           url: 'https://name/',
@@ -59,7 +73,7 @@ describe('Reducer', () => {
         expect.objectContaining({
           by: 'unknown',
           id: 23965288,
-          time: 1595859421,
+          time: date,
           title: 'Ben Garfinkel on scrutinising classic AI risk arguments',
           url: 'https://name/',
         }),
@@ -73,7 +87,7 @@ describe('Reducer', () => {
           descendants: 0,
           id: 23965288,
           score: 1,
-          time: 1595859421,
+          time: initialTime,
           type: 'story',
           url: 'https://name/',
         }),
@@ -81,7 +95,7 @@ describe('Reducer', () => {
         expect.objectContaining({
           by: 'robertwiblin',
           id: 23965288,
-          time: 1595859421,
+          time: date,
           title: 'unknown',
           url: 'https://name/',
         }),
@@ -95,7 +109,7 @@ describe('Reducer', () => {
           descendants: 0,
           id: 23965288,
           score: 1,
-          time: 1595859421,
+          time: initialTime,
           title: 'Ben Garfinkel on scrutinising classic AI risk arguments',
           type: 'story',
         }),
@@ -103,7 +117,7 @@ describe('Reducer', () => {
         expect.objectContaining({
           by: 'robertwiblin',
           id: 23965288,
-          time: 1595859421,
+          time: date,
           title: 'Ben Garfinkel on scrutinising classic AI risk arguments',
           url: 'unknown',
         }),
@@ -125,7 +139,7 @@ describe('Reducer', () => {
         expect.objectContaining({
           by: 'robertwiblin',
           id: 23965288,
-          time: 0,
+          time: currentDate,
           title: 'Ben Garfinkel on scrutinising classic AI risk arguments',
           url: 'https://name/',
         }),

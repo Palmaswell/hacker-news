@@ -11,7 +11,7 @@ import {
 export interface Story {
   readonly by: string;
   readonly id: number;
-  readonly time: number;
+  readonly time: string;
   readonly title: string;
   readonly url: string;
 }

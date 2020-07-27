@@ -2,7 +2,7 @@
   "name": "hacker-news",
   "version": "0.1.0",
   "private": false,
-  "description": "Hacker News pocket list",
+  "description": "Read your latest tech news under any network condition.",
   "license": "MIT",
   "author": "Mauricio Palma <mauricio.palma@woodlikeocean.com>",
   "main": "dist/index.js",

@@ -31,10 +31,15 @@ export enum ActionType {
   setCounter = 'setCounter',
 }
 
-export interface HackerStory extends Story {
+export interface HackerStory {
+  readonly by: string;
+  readonly id: number;
+  readonly title: string;
+  readonly time: number;
   readonly descendants: number;
   readonly score: number;
   readonly type: string;
+  readonly url: string;
 }
 
 export function publisher(
@@ -61,11 +66,14 @@ export function createStory(story: Partial<HackerStory> | null): Story | null {
     return null;
   }
   const placeholder = 'unknown';
+  const timestamp = story.time ? story.time : Date.now();
+  const date = new Date(timestamp * 1000).toLocaleString();
+
   return {
     by: story.by ?? placeholder,
     id: story.id ?? 0,
     title: story.title ?? placeholder,
-    time: story.time ?? 0,
+    time: date,
     url: story.url ?? placeholder,
   };
 }
@@ -99,7 +107,6 @@ export async function fetchStories({
         );
         const hackerStory = await res.json();
         const story = createStory(hackerStory);
-        console.log('are you going in here?', story);
 
         if (!!story) {
           if (idx <= counter) {

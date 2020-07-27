@@ -11,10 +11,14 @@ const fadeIn = keyframes`
 `;
 
 const StyledItem = styled.li`
+  position: relative;
   box-sizing: border-box;
-  height: 10vh;
-  padding: 0 20px;
-  animation: 500ms ${fadeIn} ease-out;
+  min-height: 10vh;
+  padding: 20px 20px 20px 0;
+  border-bottom: 1px solid rgb(207, 219, 213);
+  animation-name: ${fadeIn};
+  animation-duration: 500ms;
+  animation-timing-function: linear;
 `;
 
 StyledItem.displayName = 'StyledItem';
