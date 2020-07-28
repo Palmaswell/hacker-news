@@ -124,7 +124,7 @@ describe('Reducer', () => {
       );
     });
 
-    it('should return a number containing 0 on missing time property', () => {
+    it('should return the current Date on missing time property', () => {
       expect(
         createStory({
           by: 'robertwiblin',

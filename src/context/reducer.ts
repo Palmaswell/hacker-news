@@ -100,6 +100,9 @@ export async function fetchStories({
   push,
 }: InitFetchStories): Promise<(Story | null)[]> {
   try {
+    //TODO: Handle the case when the promise has not settled for caching.
+    //Currently, Promise all wait until it fetches all 500 stories.
+    //If the user loads the page before the promise settles, this function will run again.
     return await Promise.all(
       ids.map(async (id: number, idx: number) => {
         const res = await fetch(

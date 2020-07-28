@@ -29,7 +29,6 @@ export const Intersection: React.FC = () => {
 
   React.useEffect(() => {
     if (entry.isIntersecting) {
-      console.log(publisher(stories, published, counter));
       publishBulk(publisher(stories, published, counter));
     }
   }, [entry.isIntersecting, ref]);

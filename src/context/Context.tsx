@@ -25,8 +25,7 @@ export interface StoryContextProps {
   publisher(stories: Story[], published: Story[], counter: number): Story[];
 }
 
-// TODO: Display counter should be calculated dynamically
-// currently used as the most viable static value.
+// TODO: Calculate the initial display value dynamically.
 const DISPLAY_COUNTER = 20;
 
 const CACHED_KEY = 'cached_stories';

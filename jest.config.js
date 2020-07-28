@@ -1,4 +1,10 @@
 module.exports = {
+  globals: {
+    'ts-jest': {
+      isolatedModules: true,
+    },
+    setupFiles: ['<rootDir>/testing-library-setup.ts'],
+  },
   roots: [
     '<rootDir>/src'
   ],
