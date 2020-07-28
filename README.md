@@ -2,6 +2,8 @@
 
 > Read the latest Hacker News fast and reliably under any network condition.
 
+[![CircleCI](https://circleci.com/gh/Palmaswell/hacker-news.svg?style=svg)](https://circleci.com/gh/Palmaswell/hacker-news)
+
 ## Motivation
 
 Everyone loves getting their news fast and reliably. The Hacker Digest is an early-stage proof-of-concept for a single-page application that fetches the latest 500 Hacker News and displays them as quickly as possible. It offers offline functionality for you to read your latest news under any network condition.
